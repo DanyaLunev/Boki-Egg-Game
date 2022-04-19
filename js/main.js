@@ -4,7 +4,6 @@ const app = new Application({
     height: innerHeight,
     backgroundColor: 0x33373d
 });
-//.appendChild(canvas);
 
 app.renderer.view.style.position = 'absolute';
 document.body.appendChild(app.view);
@@ -12,6 +11,8 @@ document.body.appendChild(app.view);
 var catWH = innerWidth / 2.5;
 var eggYPOS = 0;
 var grav = 3;
+var winW = 0;
+var winH = 0;
 
 PIXI.loader
     .add('./img/bgGame.png')
@@ -21,6 +22,32 @@ PIXI.loader
     .load(startGame);
 
 function startGame() {
+    // Div
+    setTimeout(() => {
+        var canvas =  document.getElementsByTagName("canvas")[0];
+        const parent = document.createElement("div");
+        const el = document.body.appendChild(parent);
+        parent.appendChild(canvas);
+
+        if (window.screen.availWidth < 500) {
+            el.style.width = "100vw";
+            el.style.height = "100vh";
+            winW = "100vw";
+            winH = "100vh";
+        } else {
+            el.style.height = "100vh";
+            el.style.width = "30vw";
+
+            winW = "30vw";
+            winH = "100vh";
+
+            el.style.position = "absolute";
+            el.style.left = "35vw";
+
+            app.renderer.resize(el.style.width, el.style.height);
+        }
+    }, 3);
+
     // Add Sprites
     let bgGame = new PIXI.Sprite(PIXI.loader.resources['./img/bgGame.png'].texture);
     let catEat = new PIXI.Sprite(PIXI.loader.resources['./img/catEat.png'].texture);
@@ -31,15 +58,6 @@ function startGame() {
     app.stage.addChild(bgGame);
     bgGame.width = innerWidth;
     bgGame.height = innerHeight;
-
-    // Div
-    setTimeout(() => {
-        var canvas =  document.getElementsByTagName("canvas")[0];
-        const parent = document.createElement("div");
-        const el = document.body.appendChild(parent);
-        parent.appendChild(canvas);
-        console.log(canvas);    
-    }, 3);
 
     // Load Cat Main
     app.stage.addChild(catMain);
@@ -52,7 +70,7 @@ function startGame() {
     document.addEventListener('touchstart', checkPosition => {
         if (checkPosition.touches[0].clientX < innerWidth / 2) {
             catMain.x -= 30;
-            console.log("Left");
+            console.log("Left",);
         } else {
             catMain.x += 30;
             console.log("Right");
