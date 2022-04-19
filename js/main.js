@@ -8,12 +8,24 @@ const app = new Application({
 app.renderer.view.style.position = 'absolute';
 document.body.appendChild(app.view);
 
-var catWH = innerWidth / 2.5;
-var eggYPOS = 0;
-var grav = 3;
+// Variables
+var catWH = window.innerWidth / 2.5;
+var grav = 2;
+var score = 0;
+
+// Eggs
+var eggs = [];
+
+eggs[0] = {
+    x : 100,
+    y : 0
+}
+
+// Window Width and Height
 var winW = 0;
 var winH = 0;
 
+// Load Game
 PIXI.loader
     .add('./img/bgGame.png')
     .add('./img/catEat.png')
@@ -21,6 +33,7 @@ PIXI.loader
     .add('./img/egg.png')
     .load(startGame);
 
+// Game function
 function startGame() {
     // Div
     setTimeout(() => {
@@ -30,12 +43,12 @@ function startGame() {
         parent.appendChild(canvas);
 
         if (window.screen.availWidth < 500) {
-            el.style.width = "100vw";
-            el.style.height = "100vh";
-            winW = "100vw";
-            winH = "100vh";
+            el.style.width = window.innerWidth;
+            el.style.height = window.innerHeight;
+            winW = window.innerWidth;
+            winH = window.innerHeight;
         } else {
-            el.style.height = "100vh";
+            el.style.height = window.innerHeight;
             el.style.width = "30vw";
 
             winW = "30vw";
@@ -56,19 +69,20 @@ function startGame() {
 
     // Load Game window
     app.stage.addChild(bgGame);
-    bgGame.width = innerWidth;
-    bgGame.height = innerHeight;
+    bgGame.width = window.innerWidth;
+    bgGame.height = window.innerHeight;
 
     // Load Cat Main
     app.stage.addChild(catMain);
     catMain.width = catWH;
     catMain.height = catWH;
-    catMain.anchor.set(0.5, 0.5)
-    catMain.position.set(innerWidth / 2, innerHeight - catMain.height / 2 + 1);
+    catMain.anchor.set(0.5, 0.5);
+    catMain.position.set(window.innerWidth / 2, window.innerHeight - catMain.height / 2 + 1);
 
     // Move cat
+    // Touch
     document.addEventListener('touchstart', checkPosition => {
-        if (checkPosition.touches[0].clientX < innerWidth / 2) {
+        if (checkPosition.touches[0].clientX < window.innerWidth / 2) {
             catMain.x -= 30;
             console.log("Left",);
         } else {
@@ -77,6 +91,7 @@ function startGame() {
         }
     });
 
+    // Keyboard
     document.addEventListener('keydown', event => {
         if (event.keyCode == 37) {
             catMain.x -= 30;
@@ -87,14 +102,28 @@ function startGame() {
     });
 
     // Eggs
-    app.ticker.add(delta => loop(delta))
-    function loop() {
+    for (var i = 0; i < eggs.length; i++) {
         app.stage.addChild(egg);
+        egg.anchor.set(0.5, 0.5);
         egg.width = 50;
         egg.height = 65;
-        egg.anchor.set(0.5, 0.5)
-        egg.position.set(Math.random() * app.screen.width, eggYPOS);
-        eggYPOS += grav;
+        egg.position.set(eggs[i].x, eggs[i].y)
+        eggs[i].y += grav;
+        console.log("Spawn")
+
+        // Egg spawner
+        if (eggs[i].y == innerHeight - (catWH * 2)) {
+            eggs.push({
+                x : Math.floor(Math.random() * (window.innerWidth - 50)),
+                y : 0
+            });
+            console.log(eggs[i].x);
+        }
+
+        // Egg speed
+        if (score / 10 == 0 && score != 0) {
+            grav++;
+        }
     }
  
 }
