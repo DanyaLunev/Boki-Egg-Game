@@ -48,7 +48,7 @@ function startGame() {
             winW = window.innerWidth;
             winH = window.innerHeight;
         } else {
-            el.style.height = window.innerHeight;
+            el.style.height = "100vh";
             el.style.width = "30vw";
 
             winW = "30vw";
@@ -57,7 +57,7 @@ function startGame() {
             el.style.position = "absolute";
             el.style.left = "35vw";
 
-            app.renderer.resize(el.style.width, el.style.height);
+            app.renderer.resize(341, 970);
         }
     }, 3);
 
