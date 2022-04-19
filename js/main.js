@@ -4,6 +4,7 @@ const app = new Application({
     height: innerHeight,
     backgroundColor: 0x33373d
 });
+//.appendChild(canvas);
 
 app.renderer.view.style.position = 'absolute';
 document.body.appendChild(app.view);
@@ -30,6 +31,15 @@ function startGame() {
     app.stage.addChild(bgGame);
     bgGame.width = innerWidth;
     bgGame.height = innerHeight;
+
+    // Div
+    setTimeout(() => {
+        var canvas =  document.getElementsByTagName("canvas")[0];
+        const parent = document.createElement("div");
+        const el = document.body.appendChild(parent);
+        parent.appendChild(canvas);
+        console.log(canvas);    
+    }, 3);
 
     // Load Cat Main
     app.stage.addChild(catMain);
